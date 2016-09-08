@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Painter</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Painter</a>
+        </div>
+        <div class="collapse navbar-collapse">
+        </div>
+        <!--/.nav-collapse -->
+    </div>
+</div>
+
+<div class="container">
+    <div class="row" id="Menu">
+        <ul class="paintList">
+            <li id="pen">
+                <button type="button" class="btn btn-default btn-lg toolButton dropShadow selected" data-tooltype="pen"
+                        data-toggle="tooltip" data-placement="top" title="Pencil">
+                    <span class="fa fa-paint-brush" aria-hidden="true"></span>
+                </button>
+            </li>
+            <li id="line">
+                <button type="button" class="btn btn-default btn-lg toolButton dropShadow" data-tooltype="line"
+                        data-toggle="tooltip" data-placement="top" title="Line">
+                    <span class="fa fa-minus" aria-hidden="true"></span>
+                </button>
+            </li>
+            <li id="rect">
+                <button type="button" class="btn btn-default btn-lg toolButton dropShadow" data-tooltype="rect"
+                        data-toggle="tooltip" data-placement="top" title="Rectangle, Ctrl-click for switching between
+                        filled and non-filled rectangles.">
+                    <span class="fa fa-square-o" aria-hidden="true"></span>
+                </button>
+            </li>
+            <li id="circle">
+                <button type="button" class="btn btn-default btn-lg toolButton dropShadow" data-tooltype="circle"
+                        data-toggle="tooltip" data-placement="top" title="Circle, Ctrl-click for switching between
+                        filled and non-filled circles.">
+                    <span class="fa fa-circle-o" aria-hidden="true"></span>
+                </button>
+            </li>
+            <li id="text">
+                <button type="button" class="btn btn-default btn-lg toolButton dropShadow" data-tooltype="text"
+                        data-toggle="tooltip" data-placement="top" title="Text">
+                    <span class="fa fa-font" aria-hidden="true"></span>
+                </button>
+            </li>
+            <li id="eraser">
+                <button type="button" class="btn btn-default btn-lg toolButton dropShadow" data-tooltype="eraser"
+                        data-toggle="tooltip" data-placement="top" title="Eraser">
+                    <span class="fa fa-eraser" aria-hidden="true"></span>
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <div class="canvasContainer">
+        <div>
+            <canvas id="painter" width="500" height="500"></canvas>
+            <canvas id="tempPainter" width="500" height="500"></canvas>
+        </div>
+        <div>
+            <button type="button" class="btn btn-default btn-lg dropShadow" id="clearBtn">
+                <span>Clear</span>
+            </button>
+        </div>
+    </div>
+    <div class="rightList">
+        <ul>
+            <li> <!-- Color button -->
+                <b>Color</b>
+                <div id="hexColorButton">
+                    <input id="hexColorInput" type="color" value="#ffffff" />
+                </div>
+            </li>
+            <li role="presentation" class="blackText"><b>Line Width: </b><span class="badge lineWidthBadge dropShadow">5</span></li>
+            <li> <!-- Line width -->
+                <div class="input-group lineWidth">
+                        <input id="lineW" type="range"  min="1" max="50" value="5">
+                </div>
+            </li>
+            <li> <!-- Font Select -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        Font <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" class="fontSelect" data-font="px Arial">Arial</a></li>
+                        <li><a href="#" class="fontSelect" data-font="px Courier New">Courier New</a></li>
+                        <li><a href="#" class="fontSelect" data-font="px sans-serif">Sans Serif</a></li>
+                        <li><a href="#" class="fontSelect" data-font="px Verdana">Verdana</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li role="presentation" class="blackText"><b>Font Size: </b><span class="badge fontSizeBadge dropShadow">20</span></li>
+            <li> <!-- Font Size -->
+                <div class="input-group">
+                    <input id="fontSize" type="range"  min="1" max="80" value="20">
+                </div>
+            </li>
+            <li> <!-- Undo + Redo -->
+                <button type="button" class="btn btn-default btn-lg undo dropShadow">
+                    <span aria-hidden="true"></span> Undo
+                </button>
+            </li>
+            <li>
+                <button type="button" class="btn btn-default btn-lg redo dropShadow">
+                    <span aria-hidden="true"></span> Redo
+                </button>
+            </li>
+            <li> <!-- Save + Load -->
+                <button type="button" class="btn btn-primary btn-lg dropShadow" data-toggle="modal" data-target="#saveModal">
+                    Save
+                </button>
+            </li>
+            <li>
+                <button type="button" class="btn btn-primary btn-lg dropShadow" data-toggle="modal" data-target="#loadModal">
+                    Load
+                </button>
+            </li>
+        </ul>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">Save</h4>
+          </div>
+          <div class="modal-body">
+              <div class="form-group">
+                <input type="text" class="form-control" id="saveUsername" placeholder="Enter username" required>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="saveTitle" placeholder="Enter title" required>
+              </div>
+          </div>
+          <div class="modal-footer row">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="saveButton">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="loadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Load</h4>
+          </div>
+          <div class="modal-body loadList">
+              <div class="form-group">
+                <input type="text" class="form-control" id="loadUsername" placeholder="Enter username" required>
+              </div>
+              <button type="button" class="btn btn-primary" id="loadListButton">Load list</button>
+          </div>
+          <div class="modal-footer row">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="loadSelectedButton">Load selected</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</div>
+<!-- /.container -->
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script language="javascript" type="text/javascript" src="libs/base.js"></script>
+<script language="javascript" type="text/javascript" src="js/painter.js"></script>
+</body>
+</html>
